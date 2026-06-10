@@ -2,21 +2,45 @@ application:
   title: Customer-data-Service
   version: 1.0.0
 server:
-  port: 8080
-spring:
-  datasource:
-    password: root
-    url: jdbc:mysql://localhost:3306/customer?allowPublicKeyRetrieval=true&useSSL=false
-    username: root
-  hikari:
-    connectionTimeout: 300000
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+  port: 443
+  ssl:
+    enabled: true
+    key-store: classpath:key.p12
+    key-store-password: changeit
+    key-store-type: PKCS12
+    key-alias: local-ssl
+    enabled-protocols: TLSv1.2
+    ciphers:
+      - TLS_RSA_WITH_AES_128_GCM_SHA256
+      - TLS_RSA_WITH_AES_256_GCM_SHA256
+      - TLS_RSA_WITH_AES_128_CBC_SHA256
+      - TLS_RSA_WITH_AES_256_CBC_SHA256
+#spring:
+#  datasource:
+#    password: root
+#    url: jdbc:mysql://localhost:3306/customer?allowPublicKeyRetrieval=true&useSSL=false
+#    username: root
+#  hikari:
+#    connectionTimeout: 300000
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQLDialect
 uri:
   amex:
     base: http://localhost:8081
     billing: /v1/billing
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health,info,heapdump
+  endpoint:
+    prometheus:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
